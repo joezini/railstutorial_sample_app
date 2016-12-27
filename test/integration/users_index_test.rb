@@ -30,4 +30,11 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     assert_select 'a', text: 'delete', count: 0
   end
   
+  test "un-activated users do not appear" do
+    log_in_as(@admin)
+    @non_admin.update_attribute(:activated, false)
+    get users_path
+    assert_select 'a[href=?]', user_path(@non_admin), count: 0
+  end
+  
 end
